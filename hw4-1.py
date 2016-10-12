@@ -25,15 +25,26 @@ FREQUENCY_RANGE = [f for f in range(1000, 100001)]
 def _get_loss(k1, k2, f, d):
 	return (k1 * math.sqrt(f) + k2 * f)
 
+def _get_resistance(k1, k2, f):
+	return 17.27 * (k1 * math.sqrt(f) + k2 * f)
+
+def _get_kn(cable_id):
+	return (DATA[K1][cable_id], DATA[K2][cable_id])
+
 def plot_loss(cable_id):
-	k1 = DATA[K1][cable_id]
-	k2 = DATA[K2][cable_id]
+	k1, k2 = _get_kn(cable_id)
 	d = 1 #assuming this is one
 	y_axis = [_get_loss(k1, k2, f, d) for f in FREQUENCY_RANGE]
+	pyplot.plot(FREQUENCY_RANGE, y_axis)
+
+def plot_resistance(cable_id):
+	k1, k2 = _get_kn(cable_id)
+	y_axis = [_get_resistance(k1, k2, f) for f in FREQUENCY_RANGE]
 	pyplot.plot(FREQUENCY_RANGE, y_axis)
 
 if __name__=='__main__':
 	for cable in [C625_F, C500_F, CRG_6, CRG_59]:
 		plot_loss(cable)
+		plot_resistance(cable)
 	pyplot.show()
 
